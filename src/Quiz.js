@@ -5,8 +5,15 @@ class Quiz extends Component {
     constructor(props) {
         super(props);
         let riddle = this.playGame();
-        this.state = { riddle };
+        let correct = false;//true if you find the correct answer
+        let gameOver = false;//true everytime a number is chosen doesn't matter correct or wrong, the game is over
+        this.state = {
+            riddle,
+            correct,
+            gameOver
+        };
         this.renderOptions = this.renderOptions.bind(this);
+        this.checkResults = this.checkResults.bind(this);
     }
     randomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -46,7 +53,7 @@ class Quiz extends Component {
         let result = field1 + field2;
         let resultsArray = this.generateRandomOptions(result);
         resultsArray.push(result);
-        resultsArray.sort(function(a,b) {return 0.5 - Math.random()});//to shuffle the order of elements in array
+        resultsArray.sort(function (a, b) { return 0.5 - Math.random() });//to shuffle the order of elements in array
         let riddle = {
             resultsArray: resultsArray,
             field1: field1,
@@ -57,11 +64,27 @@ class Quiz extends Component {
         //do console.log(riddle); for checking that everything in our riddle object is what we were expecting
         return riddle;
     }
+    checkResults(option) {
+        console.log('checkResults called' + option);
+        if (this.state.riddle.answer === option) {
+            console.log('Correct Answer');
+            this.setState({
+                correct: true,
+                gemeOver: true
+            });
+        } else {
+            console.log('Wrong Answer');
+            this.setState({
+                correct: false,
+                gemeOver: true
+            });
+        }
+    }
     renderOptions() {
         return (
             <div className="options">
                 {this.state.riddle.resultsArray.map((option, i) =>
-                    <QuizOptions option={option} key={i} />
+                    <QuizOptions option={option} key={i} checkResults={(option) => this.checkResults(option)} />
                 )}
             </div>
         );
@@ -73,6 +96,8 @@ class Quiz extends Component {
                     <p className="question">What is the sum of <span className="text-info">{this.state.riddle.field1}</span> and <span className="text-info">{this.state.riddle.field2}</span>?</p>
                     {this.renderOptions()}
                 </div>
+                {/* Correct: {this.state.correct ? "True" : "False"}<br/>
+                GameOver: {this.state.gameOver ? "True" : "False"} to check the values of the states*/}
                 <div className="play-again">
                     <a className="button">Play Again</a>
                 </div>
