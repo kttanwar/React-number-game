@@ -28,7 +28,7 @@ class Quiz extends Component {
         while (randomNumberArray.length <= 3) {
             let randomNumber = this.randomNumber(1, 19);
             if (randomNumberArray.indexOf(randomNumber) > -1) continue;
-            randomNumberArray.push(randomnumber);
+            randomNumberArray.push(randomNumber);
         }
         //do console.log(randomNumberArray); to check the elements we expected to have
         for (let i = 0; i < 3; i++) {
@@ -123,7 +123,7 @@ class Quiz extends Component {
                 </div>
                 {/* Correct: {this.state.correct ? "True" : "False"}<br/>
                 GameOver: {this.state.gameOver ? "True" : "False"} to check the values of the states*/}
-                <div className={classNames("after", { 'hide': !this.state.gameOver }, { 'wrong': !this.state.correct }, { 'correct': this.state.correct })}>
+                <div className={classNames("after", { 'hide': !this.state.gameOver }, { 'wrong animated zoomInDown': !this.state.correct }, { 'correct animated zoomInDown': this.state.correct })}>
                     {this.renderMessage()}
                 </div>
                 <div className="play-again">
