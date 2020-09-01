@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import QuizOptions from './QuizOptions';
+import classNames from 'classnames';
 
 class Quiz extends Component {
     constructor(props) {
@@ -14,6 +15,7 @@ class Quiz extends Component {
         };
         this.renderOptions = this.renderOptions.bind(this);
         this.checkResults = this.checkResults.bind(this);
+        this.play = this.play.bind(this);
     }
     randomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -62,7 +64,16 @@ class Quiz extends Component {
         };
 
         //do console.log(riddle); for checking that everything in our riddle object is what we were expecting
-        return riddle;
+
+        if (this.state && this.state.gameOver) {//Done this to reset the state, so a new game can be loaded. We did 'this.state' if it is true which means it is an existing game for which you have set the state of riddle and 'this.state.gameOver' if this is also true then setState of riddle.
+            this.setState({
+                riddle: riddle
+            });
+        } else {//else return riddle
+            return riddle;
+        }
+
+
     }
     checkResults(option) {
         console.log('checkResults called' + option);
@@ -89,6 +100,20 @@ class Quiz extends Component {
             </div>
         );
     }
+    renderMessage() {
+        if (this.state.correct) {
+            return <h3>Good job! Hit the button below to Play Again.</h3>
+        } else {
+            return <h3>ohhh ohhh! Hit the button below to Play Again.</h3>
+        }
+    }
+    play() {
+        this.setState({
+            correct: false,
+            gameOver: false
+        });
+        this.playGame();
+    }
     render() {
         return (
             <div className="quiz">
@@ -98,8 +123,11 @@ class Quiz extends Component {
                 </div>
                 {/* Correct: {this.state.correct ? "True" : "False"}<br/>
                 GameOver: {this.state.gameOver ? "True" : "False"} to check the values of the states*/}
+                <div className={classNames("after", { 'hide': !this.state.gameOver }, { 'wrong': !this.state.correct }, { 'correct': this.state.correct })}>
+                    {this.renderMessage()}
+                </div>
                 <div className="play-again">
-                    <a className="button">Play Again</a>
+                    <a className="button" onClick={this.play}>Play Again</a>
                 </div>
             </div>
         );
